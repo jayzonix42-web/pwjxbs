@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok Coins Exchange</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .mobile-screen {
+      width: 100%;
+      max-width: 414px;
+      height: 100vh;
+      max-height: 896px;
+      background: #ffffff;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+      overflow-y: auto;
+    }
+
+    /* Top Navigation Header */
+    .nav-header {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-bottom: 1px solid #eaeaea;
+      background: #fff;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 16px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #121212;
+    }
+
+    .nav-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #121212;
+    }
+
+    /* Main Balance Section */
+    .balance-section {
+      text-align: center;
+      padding: 24px 16px 16px;
+    }
+
+    .balance-label {
+      font-size: 13px;
+      color: #8a8a8e;
+      margin-bottom: 6px;
+    }
+
+    .balance-amount {
+      font-size: 34px;
+      font-weight: 800;
+      color: #121212;
+      letter-spacing: -0.5px;
+    }
+
+    .balance-subtext {
+      font-size: 12px;
+      color: #8a8a8e;
+      margin-top: 4px;
+    }
+
+    .exchange-subtext {
+      font-size: 12px;
+      color: #8a8a8e;
+      margin-top: 6px;
+    }
+
+    /* Username Input Section */
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #121212;
+      padding: 16px 16px 8px;
+    }
+
+    .input-box {
+      margin: 0 16px;
+      background: #f1f1f2;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input-prefix {
+      color: #8a8a8e;
+      font-weight: 600;
+    }
+
+    .username-input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .profile-card {
+      margin: 12px 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .profile-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .profile-handle {
+      font-weight: 700;
+      font-size: 14px;
+      color: #121212;
+    }
+
+    .profile-status {
+      font-size: 12px;
+      color: #25f4ee;
+      font-weight: 600;
+    }
+
+    /* Coin Option Grid */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 0 16px;
+      margin-bottom: 12px;
+    }
+
+    .coin-card {
+      border: 1.5px solid #eee;
+      border-radius: 10px;
+      padding: 16px 8px;
+      text-align: center;
+      cursor: pointer;
+      background: #fff;
+      transition: all 0.2s ease;
+    }
+
+    .coin-card.selected {
+      border-color: #fe2c55;
+      background: #fff0f3;
+    }
+
+    .coin-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: #121212;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .coin-icon {
+      width: 14px;
+      height: 14px;
+      background: #ffb703;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .coin-usd {
+      font-size: 13px;
+      color: #8a8a8e;
+    }
+
+    /* Custom Input Option */
+    .custom-box {
+      margin: 0 16px 20px;
+      border: 1.5px solid #eee;
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+    }
+
+    .custom-box.selected {
+      border-color: #fe2c55;
+      background: #fff0f3;
+    }
+
+    .custom-input {
+      border: none;
+      outline: none;
+      width: 120px;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* Primary Action Button */
+    .action-container {
+      padding: 16px;
+      margin-top: auto;
+    }
+
+    .exchange-btn {
+      width: 100%;
+      background: #fe2c55;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    /* Processing Recharge Modal Screen */
+    .processing-screen {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255, 255, 255, 0.96);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #fe2c55;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .processing-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: #121212;
+      margin-bottom: 6px;
+    }
+
+    .processing-sub {
+      font-size: 13px;
+      color: #8a8a8e;
+    }
+
+    /* Receipt Screen */
+    .receipt-screen {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #fff;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 20px;
+      z-index: 100;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: #25d366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .receipt-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .receipt-sub {
+      font-size: 14px;
+      color: #8a8a8e;
+      margin-bottom: 30px;
+    }
+
+    .receipt-details {
+      width: 100%;
+      border-top: 1px solid #f0f0f0;
+      margin-bottom: 30px;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+    }
+
+    .receipt-label { color: #8a8a8e; }
+    .receipt-value { font-weight: 600; color: #121212; }
+
+    .back-nav-btn {
+      width: 100%;
+      background: #25d366;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+<div class="mobile-screen">
+  <!-- Top Navigation -->
+  <div class="nav-header">
+    <span class="back-btn">&#10094;</span>
+    <span class="nav-title">Exchange</span>
+  </div>
+
+  <!-- Balance Section -->
+  <div class="balance-section">
+    <div class="balance-label">TikTok Coins Balance</div>
+    <div class="balance-amount" id="balance-usd">$856,384,831.36</div>
+    <div class="balance-subtext" id="balance-sub">= $856,384,831.36 (🟡 <span id="balance-coins">70,565,887,521</span>)</div>
+    <div class="exchange-subtext">Available balance to exchange the Coins</div>
+  </div>
+
+  <!-- Target Username Panel -->
+  <div class="section-title">TikTok username</div>
+  <div class="input-box">
+    <span class="input-prefix">@</span>
+    <input type="text" class="username-input" id="user-input" value="Qkuhw" placeholder="Enter username">
+  </div>
+
+  <div class="profile-card" id="profile-card">
+    <img src="https://unavatar.io/tiktok/Qkuhw" class="profile-avatar" id="profile-img" onerror="this.src='https://via.placeholder.com/150/cccccc/ffffff?text=User'">
+    <div class="profile-info">
+      <span class="profile-handle" id="profile-handle">@Qkuhw</span>
+      <span class="profile-status">Account Found ✓</span>
+    </div>
+  </div>
+
+  <!-- Coin Exchange Options -->
+  <div class="section-title">Exchange earnings for Coins</div>
+  <div class="grid-container">
+    <div class="coin-card selected" data-coins="250" data-cost="3.03">
+      <div class="coin-val"><span class="coin-icon"></span> 250</div>
+      <div class="coin-usd">$3.03</div>
+    </div>
+    <div class="coin-card" data-coins="500" data-cost="6.07">
+      <div class="coin-val"><span class="coin-icon"></span> 500</div>
+      <div class="coin-usd">$6.07</div>
+    </div>
+    <div class="coin-card" data-coins="15000" data-cost="182.04">
+      <div class="coin-val"><span class="coin-icon"></span> 15,000</div>
+      <div class="coin-usd">$182.04</div>
+    </div>
+  </div>
+
+  <!-- Custom Coin Input -->
+  <div class="custom-box" id="custom-container">
+    <span style="font-size: 14px; font-weight: 500;">Custom Amount</span>
+    <div>
+      🟡 <input type="number" class="custom-input" id="custom-coins-input" placeholder="Enter Coins">
+    </div>
+  </div>
+
+  <!-- Exchange Submit Action -->
+  <div class="action-container">
+    <button class="exchange-btn" id="exchange-btn">Exchange</button>
+  </div>
+
+  <!-- Processing Recharge Screen -->
+  <div class="processing-screen" id="processing-screen">
+    <div class="spinner"></div>
+    <div class="processing-text">Processing recharge...</div>
+    <div class="processing-sub">Please do not close this window</div>
+  </div>
+
+  <!-- Completed Receipt View -->
+  <div class="receipt-screen" id="receipt-screen">
+    <div class="success-icon">&#10003;</div>
+    <div class="receipt-title">Exchange Completed!</div>
+    <div class="receipt-sub">You exchanged for 🟡 <span id="rec-coins">250</span> Coins</div>
+
+    <div class="receipt-details">
+      <div class="receipt-row">
+        <span class="receipt-label">Recipient</span>
+        <span class="receipt-value" id="rec-user">@Qkuhw</span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-label">Coins Exchanged</span>
+        <span class="receipt-value"><span id="rec-coins-detail">250</span> Coins</span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-label">Deducted Amount</span>
+        <span class="receipt-value">$<span id="rec-cost">3.03</span></span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-label">Time</span>
+        <span class="receipt-value" id="rec-time">9/28/2026, 1:46:47</span>
+      </div>
+    </div>
+
+    <button class="back-nav-btn" id="receipt-back-btn">&larr; Go back</button>
+  </div>
+</div>
+
+<script>
+  let usdBalance = 856384831.36;
+  const coinRate = 0.012137;
+
+  let selectedCoins = 250;
+  let selectedCost = 3.03;
+
+  // DOM Elements
+  const balanceUsdEl = document.getElementById('balance-usd');
+  const balanceCoinsEl = document.getElementById('balance-coins');
+  const balanceSubEl = document.getElementById('balance-sub');
+  
+  const userInput = document.getElementById('user-input');
+  const profileImg = document.getElementById('profile-img');
+  const profileHandle = document.getElementById('profile-handle');
+
+  const coinCards = document.querySelectorAll('.coin-card');
+  const customContainer = document.getElementById('custom-container');
+  const customCoinsInput = document.getElementById('custom-coins-input');
+  const exchangeBtn = document.getElementById('exchange-btn');
+
+  const processingScreen = document.getElementById('processing-screen');
+  const receiptScreen = document.getElementById('receipt-screen');
+  const receiptBackBtn = document.getElementById('receipt-back-btn');
+
+  function updateBalanceDisplay() {
+    balanceUsdEl.textContent = '$' + usdBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const totalCoins = Math.floor(usdBalance / coinRate);
+    balanceCoinsEl.textContent = totalCoins.toLocaleString();
+    balanceSubEl.innerHTML = `= $${usdBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (🟡 ${totalCoins.toLocaleString()})`;
+  }
+
+  // Username Input Handler
+  userInput.addEventListener('input', (e) => {
+    const username = e.target.value.trim() || 'user';
+    profileHandle.textContent = '@' + username;
+    profileImg.src = `https://unavatar.io/tiktok/${username}`;
+  });
+
+  // Coin Grid Card Handler
+  coinCards.forEach(card => {
+    card.addEventListener('click', () => {
+      coinCards.forEach(c => c.classList.remove('selected'));
+      customContainer.classList.remove('selected');
+      customCoinsInput.value = '';
+
+      card.classList.add('selected');
+      selectedCoins = parseInt(card.dataset.coins);
+      selectedCost = parseFloat(card.dataset.cost);
+    });
+  });
+
+  // Custom Input Handler
+  customCoinsInput.addEventListener('input', (e) => {
+    coinCards.forEach(c => c.classList.remove('selected'));
+    customContainer.classList.add('selected');
+
+    const num = parseInt(e.target.value) || 0;
+    selectedCoins = num;
+    selectedCost = parseFloat((num * coinRate).toFixed(2));
+  });
+
+  // Exchange Action with Processing Step
+  exchangeBtn.addEventListener('click', () => {
+    if (selectedCoins <= 0) return;
+
+    if (usdBalance < selectedCost) {
+      alert("Insufficient Balance");
+      return;
+    }
+
+    // 1. Show Processing Recharge Screen
+    processingScreen.style.display = 'flex';
+
+    // 2. Wait 2 seconds before completing exchange
+    setTimeout(() => {
+      // Hide Processing Screen
+      processingScreen.style.display = 'none';
+
+      // Deduct balance
+      usdBalance -= selectedCost;
+      updateBalanceDisplay();
+
+      // Populate Receipt Details
+      document.getElementById('rec-coins').textContent = selectedCoins.toLocaleString();
+      document.getElementById('rec-coins-detail').textContent = selectedCoins.toLocaleString();
+      document.getElementById('rec-user').textContent = profileHandle.textContent;
+      document.getElementById('rec-cost').textContent = selectedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      
+      const now = new Date();
+      document.getElementById('rec-time').textContent = now.toLocaleString();
+
+      // 3. Show Completed Receipt Screen
+      receiptScreen.style.display = 'flex';
+    }, 2000);
+  });
+
+  // Back Button Handler
+  receiptBackBtn.addEventListener('click', () => {
+    receiptScreen.style.display = 'none';
+  });
+
+  // Initial Sync
+  updateBalanceDisplay();
+</script>
+
+</body>
+</html>
